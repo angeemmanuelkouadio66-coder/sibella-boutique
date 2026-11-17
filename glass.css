@@ -1,3 +1,4 @@
+:
 :root{--script:'Playfair Display',Georgia,serif;--sans:'Poppins','Segoe UI',Arial,sans-serif;
 --glass:rgba(255,255,255,.38);--glass-b:rgba(255,255,255,.7)}
 
@@ -40,3 +41,7 @@ dialog{background:rgba(255,255,255,.72);-webkit-backdrop-filter:blur(20px) satur
 
 /* Menu : s'ouvre à droite, près du panier */
 #menu{left:auto;right:0;transform:translateX(100%);background:rgba(255,255,255,.65);-webkit-backdrop-filter:blur(20px) saturate(170%);backdrop-filter:blur(20px) saturate(170%);border-left:1px solid var(--glass-b)}
+
+/* Bouton fermer des fiches : toujours visible, sans cadre */
+.cl{z-index:5;width:36px;height:36px;padding:0;border-radius:50%;background:rgba(255,255,255,.88);display:grid;place-items:center;font-size:1.1rem;line-height:1;color:var(--ink);box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.cl:focus,.cl:focus-visible{outline:none}
