@@ -9,13 +9,15 @@
 <link rel="icon" href="images/logo.jpg">
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--blush:#fff1f7;--rose-soft:#ffd3e4;--magenta:#b0125b;--gold:#c99a2e;--gold-light:#f4d27a;--ink:#4a1030;--script:'Great Vibes','Brush Script MT',cursive;--sans:'Jost','Segoe UI',Arial,sans-serif}
+:root{--blush:#fff1f7;--rose-soft:#ffd3e4;--magenta:#b0125b;--gold:#c99a2e;--gold-light:#f4d27a;--ink:#4a1030;
+--script:'Great Vibes','Brush Script MT',cursive;--sans:'Jost','Segoe UI',Arial,sans-serif}
 *{box-sizing:border-box;margin:0}
 [hidden]{display:none!important}
 html{scroll-behavior:smooth}
 body{font-family:var(--sans);color:var(--ink);background:var(--blush);line-height:1.5}
 button,input,textarea,select{font:inherit;color:inherit}
 :focus-visible{outline:3px solid var(--magenta);outline-offset:2px}
+
 header{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:10px;padding:8px 14px;background:rgba(255,241,247,.95);backdrop-filter:blur(8px);border-bottom:2px solid var(--gold-light)}
 header img{width:46px;height:46px;border-radius:50%;border:2px solid var(--gold);animation:float 5s ease-in-out infinite}
 header .brand{font-family:var(--script);font-size:1.8rem;color:var(--magenta);flex:1}
@@ -24,9 +26,11 @@ header .brand{font-family:var(--script);font-size:1.8rem;color:var(--magenta);fl
 #cartBtn.bump{animation:bump .4s}
 @keyframes bump{50%{transform:scale(1.2)}}
 @keyframes float{50%{transform:translateY(-4px)}}
+
 .banner{text-align:center;padding:22px 16px;background:linear-gradient(120deg,var(--rose-soft),#fff,var(--rose-soft));background-size:200% 100%;animation:shine 8s linear infinite}
 .banner h1{font-family:var(--script);font-weight:400;font-size:clamp(2rem,8vw,3rem);color:var(--magenta)}
 @keyframes shine{to{background-position:-200% 0}}
+
 main{max-width:1000px;margin:0 auto;padding:16px 14px 40px}
 #q{width:100%;padding:12px 18px;border-radius:999px;border:2px solid var(--gold-light);background:#fff}
 .cats{display:flex;gap:16px;justify-content:center;margin:18px 0}
@@ -35,6 +39,7 @@ main{max-width:1000px;margin:0 auto;padding:16px 14px 40px}
 .cat.on span{border-color:var(--magenta);transform:scale(1.08)}
 .cat img{width:100%;height:100%;object-fit:cover}
 h2{font-family:var(--script);font-weight:400;font-size:2rem;color:var(--magenta);margin:14px 0 10px}
+
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px}
 .row{display:flex;overflow-x:auto;gap:14px;padding-bottom:8px;scroll-snap-type:x mandatory}
 .row .card{flex:0 0 190px;scroll-snap-align:start}
@@ -52,11 +57,13 @@ h2{font-family:var(--script);font-weight:400;font-size:2rem;color:var(--magenta)
 .add:active{transform:scale(.96)}
 .add:disabled{background:#bbb;cursor:not-allowed}
 .vide{text-align:center;padding:24px;opacity:.8}
+
 .tag{position:absolute;top:8px;left:8px;background:var(--gold);color:var(--ink);font-size:.75rem;font-weight:600;padding:3px 10px;border-radius:999px}
 .tag.out{top:auto;bottom:8px;background:var(--ink);color:#fff}
 .heart{position:absolute;top:6px;right:6px;width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.9);font-size:1.3rem;color:var(--magenta);cursor:pointer}
 .heart.on{animation:bump .4s}
 .card.out img{filter:grayscale(1);opacity:.6}
+
 #over{position:fixed;inset:0;background:rgba(74,16,48,.5);opacity:0;pointer-events:none;transition:opacity .3s;z-index:8}
 #drawer{position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);background:#fff;z-index:9;transform:translateX(100%);transition:transform .3s;display:flex;flex-direction:column}
 body.open #drawer{transform:none}
@@ -76,14 +83,17 @@ form fieldset{border:2px solid var(--rose-soft);border-radius:12px;padding:6px 1
 form legend{font-weight:600;color:var(--magenta);padding:0 6px}
 form small{opacity:.75}
 .back{margin-top:10px;width:100%;border:2px solid var(--gold);background:none;border-radius:12px;padding:10px;cursor:pointer}
+
 #toast{position:fixed;left:50%;bottom:90px;transform:translate(-50%,20px);background:var(--ink);color:#fff;padding:10px 18px;border-radius:999px;opacity:0;transition:.3s;z-index:12;pointer-events:none}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 .help{position:fixed;right:14px;bottom:14px;z-index:6;display:flex;align-items:center;gap:8px;padding:12px 18px;border-radius:999px;background:#25d366;color:#fff;font-weight:600;text-decoration:none;box-shadow:0 6px 20px rgba(0,0,0,.25);animation:pulse 2.2s infinite}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(37,211,102,.6)}70%{box-shadow:0 0 0 16px rgba(37,211,102,0)}100%{box-shadow:0 0 0 0 rgba(37,211,102,0)}}
+
 footer{text-align:center;padding:30px 16px 90px;background:var(--ink);color:#fff}
 footer b{font-family:var(--script);font-size:2rem;font-weight:400;color:var(--gold-light)}
 footer .links{display:flex;gap:12px;justify-content:center;margin:12px 0;flex-wrap:wrap}
 footer .links a{padding:8px 18px;border:2px solid var(--gold-light);border-radius:999px;color:#fff;text-decoration:none}
+
 #produits,#bestBox,#comment,#apropos,#contact{scroll-margin-top:72px}
 #menuBtn{border:0;background:none;font-size:1.7rem;cursor:pointer;color:var(--magenta)}
 #menu{position:fixed;top:0;left:0;bottom:0;width:min(300px,85%);background:#fff;z-index:9;transform:translateX(-100%);transition:transform .3s;display:flex;flex-direction:column;padding:18px}
@@ -103,6 +113,7 @@ body.has .help{bottom:84px}
 body.has #toast{bottom:150px}
 body.has footer{padding-bottom:150px}
 body.open #bar,body.menu #bar{display:none}
+
 dialog{border:0;border-radius:18px;width:min(440px,94vw);max-height:90vh;padding:16px;color:var(--ink);background:#fff}
 dialog::backdrop{background:rgba(74,16,48,.55)}
 .cl{position:absolute;top:8px;right:10px;border:0;background:none;font-size:1.5rem;cursor:pointer}
@@ -112,137 +123,19 @@ dialog::backdrop{background:rgba(74,16,48,.55)}
 table.g{width:100%;border-collapse:collapse;margin:10px 0}
 table.g th,table.g td{border:1px solid var(--rose-soft);padding:8px;text-align:center}
 table.g th{background:var(--rose-soft)}
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
-/* LIQUID GLASS */
-:root{
-  --glass-shadow:0 18px 45px rgba(126,32,79,.13),inset 0 1px 0 rgba(255,255,255,.9);
-}
-body{
-  min-height:100vh;
-  background:
-    radial-gradient(ellipse at 8% 12%,rgba(255,164,207,.42),transparent 34%),
-    radial-gradient(ellipse at 92% 30%,rgba(245,211,122,.30),transparent 30%),
-    radial-gradient(ellipse at 45% 95%,rgba(255,194,224,.42),transparent 38%),
-    linear-gradient(135deg,#fff7fb 0%,#fce8f2 48%,#fff9f0 100%);
-  background-attachment:fixed;
-}
-header{
-  background:rgba(255,247,251,.62);
-  -webkit-backdrop-filter:blur(24px) saturate(180%);
-  backdrop-filter:blur(24px) saturate(180%);
-  border:1px solid rgba(255,255,255,.78);
-  border-bottom:1px solid rgba(201,154,46,.34);
-  box-shadow:0 10px 35px rgba(112,28,69,.10),inset 0 1px 0 #fff;
-}
-header img{box-shadow:0 5px 18px rgba(176,18,91,.18)}
-#themeBtn{
-  width:42px;height:42px;flex:0 0 42px;border-radius:50%;
-  border:1px solid rgba(255,255,255,.95);
-  background:rgba(255,255,255,.58);color:var(--magenta);
-  box-shadow:0 6px 18px rgba(112,28,69,.12),inset 0 1px 0 #fff;
-  -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
-  font-size:1.2rem;cursor:pointer;
-}
-#cartBtn,.add,#barCmd{
-  border:1px solid rgba(255,255,255,.55);
-  box-shadow:0 9px 22px rgba(176,18,91,.23),inset 0 1px 0 rgba(255,255,255,.32);
-}
-.banner{
-  position:relative;isolation:isolate;margin:18px 14px 8px;
-  border:1px solid rgba(255,255,255,.9);border-radius:28px;
-  background:linear-gradient(125deg,rgba(255,255,255,.72),rgba(255,211,228,.42),rgba(255,255,255,.58));
-  -webkit-backdrop-filter:blur(22px) saturate(170%);backdrop-filter:blur(22px) saturate(170%);
-  box-shadow:var(--glass-shadow);overflow:hidden;
-}
-.banner:before,.card:before{
-  content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
-  background:linear-gradient(135deg,rgba(255,255,255,.65),transparent 38%,rgba(255,255,255,.12) 72%,rgba(255,255,255,.45));
-}
-.banner h1{position:relative;text-shadow:0 3px 18px rgba(176,18,91,.12)}
-main{padding-top:18px}
-#q{
-  border:1px solid rgba(255,255,255,.95);background:rgba(255,255,255,.62);
-  -webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);
-  box-shadow:0 10px 28px rgba(126,32,79,.08),inset 0 1px 0 #fff;
-}
-.cats{gap:12px;flex-wrap:wrap}
-.cat{padding:10px 14px;border:1px solid rgba(255,255,255,.88);border-radius:22px;
-  background:rgba(255,255,255,.38);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
-  box-shadow:0 8px 22px rgba(126,32,79,.07);transition:transform .2s,background .2s}
-.cat span{border:3px solid rgba(255,255,255,.95);box-shadow:0 7px 18px rgba(126,32,79,.13)}
-.cat.on{background:rgba(255,211,228,.72);border-color:rgba(176,18,91,.25);box-shadow:0 9px 24px rgba(176,18,91,.14)}
-.card{
-  position:relative;border:1px solid rgba(255,255,255,.94);border-radius:24px;
-  background:rgba(255,255,255,.52);
-  -webkit-backdrop-filter:blur(22px) saturate(170%);backdrop-filter:blur(22px) saturate(170%);
-  box-shadow:0 16px 36px rgba(126,32,79,.12),inset 0 1px 0 rgba(255,255,255,.95);
-  transition:transform .25s,box-shadow .25s,border-color .25s;
-}
-.card:hover{transform:translateY(-5px);border-color:rgba(201,154,46,.72);box-shadow:0 22px 42px rgba(126,32,79,.18),inset 0 1px 0 #fff}
-.pic{background:linear-gradient(135deg,rgba(255,211,228,.8),rgba(255,255,255,.8))}
-.pic img{mix-blend-mode:normal}
-.info{background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.58))}
-.heart{background:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.9);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:0 5px 15px rgba(74,16,48,.12)}
-#over{background:rgba(48,13,34,.34);-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px)}
-#drawer,#menu{
-  background:rgba(255,248,252,.82);border:1px solid rgba(255,255,255,.85);
-  -webkit-backdrop-filter:blur(28px) saturate(180%);backdrop-filter:blur(28px) saturate(180%);
-  box-shadow:0 0 55px rgba(74,16,48,.18);
-}
-#drawer .top{border-bottom:1px solid rgba(201,154,46,.35)}
-.line{border-bottom:1px solid rgba(201,154,46,.2)}
-form input,form textarea,form select{background:rgba(255,255,255,.72);border:1px solid rgba(201,154,46,.45);box-shadow:inset 0 1px 3px rgba(74,16,48,.04)}
-.steps div{
-  background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.95);border-radius:20px;
-  -webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);
-  box-shadow:0 12px 28px rgba(126,32,79,.08),inset 0 1px 0 #fff;
-}
-#bar{
-  background:rgba(255,248,252,.76);border-top:1px solid rgba(255,255,255,.9);
-  -webkit-backdrop-filter:blur(24px) saturate(180%);backdrop-filter:blur(24px) saturate(180%);
-  box-shadow:0 -10px 32px rgba(74,16,48,.12);
-}
-.help{border:1px solid rgba(255,255,255,.55);box-shadow:0 12px 28px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.35)}
-dialog{
-  background:rgba(255,249,252,.88);border:1px solid rgba(255,255,255,.95);
-  -webkit-backdrop-filter:blur(26px) saturate(180%);backdrop-filter:blur(26px) saturate(180%);
-  box-shadow:0 24px 70px rgba(74,16,48,.25);
-}
-dialog::backdrop{-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
-@media(max-width:480px){
-  header{gap:7px;padding:8px 10px}
-  header img{width:40px;height:40px}
-  header .brand{font-size:1.55rem}
-  #cartBtn{padding:8px 11px;font-size:.9rem}
-  .banner{margin:12px 10px 6px;padding:22px 12px;border-radius:23px}
-  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
-  .card{border-radius:19px}
-  .info{padding:10px}
-}
-body[data-theme="dark"]{
-  --ink:#fbeaf2;--blush:#1b1018;--rose-soft:#492238;--magenta:#ff75b5;--gold:#d8b35d;--gold-light:#806638;
-  color:#fbeaf2;background:radial-gradient(ellipse at 12% 8%,rgba(112,30,75,.42),transparent 38%),radial-gradient(ellipse at 90% 30%,rgba(91,67,34,.25),transparent 35%),linear-gradient(135deg,#160f17,#24131f 55%,#17121a);background-attachment:fixed;
-}
-body[data-theme="dark"] header,body[data-theme="dark"] #drawer,body[data-theme="dark"] #menu,body[data-theme="dark"] dialog,body[data-theme="dark"] #bar{background:rgba(35,20,31,.78);color:#fbeaf2;border-color:rgba(255,255,255,.13)}
-body[data-theme="dark"] .card,body[data-theme="dark"] .cat,body[data-theme="dark"] .steps div,body[data-theme="dark"] #q{background:rgba(57,31,48,.68);color:#fbeaf2;border-color:rgba(255,255,255,.16)}
-body[data-theme="dark"] .banner{background:linear-gradient(125deg,rgba(70,31,54,.82),rgba(110,42,76,.55),rgba(45,29,42,.82))}
-body[data-theme="dark"] form input,body[data-theme="dark"] form textarea,body[data-theme="dark"] form select{background:rgba(35,20,31,.85);color:#fff;border-color:rgba(255,255,255,.2)}
-body[data-theme="dark"] #menu a{color:#fbeaf2;border-color:rgba(255,255,255,.12)}
-body[data-theme="dark"] .info{background:linear-gradient(180deg,transparent,rgba(35,20,31,.38))}
-body[data-theme="dark"] .price,body[data-theme="dark"] h2,body[data-theme="dark"] .banner h1{color:#ff91c4}
-body[data-theme="dark"] #themeBtn{background:rgba(255,255,255,.12);color:#ffd98a;border-color:rgba(255,255,255,.2)}
-@media (prefers-reduced-motion:reduce){.card:hover{transform:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
+
 <header id="top">
   <button id="menuBtn" aria-label="Ouvrir le menu">☰</button>
   <img src="images/logo.jpg" alt="Logo Si’Bella Boutique">
   <span class="brand">Si’Bella</span>
-  <button id="themeBtn" type="button" aria-label="Activer le mode sombre" title="Changer le thème">☾</button>
   <button id="cartBtn" aria-label="Ouvrir le panier">🛒 Panier<span id="count">0</span></button>
 </header>
+
 <nav id="menu" aria-label="Menu">
   <div class="mt">Si’Bella Boutique</div>
   <a href="#top" data-cat="tous">Accueil</a>
@@ -254,7 +147,9 @@ body[data-theme="dark"] #themeBtn{background:rgba(255,255,255,.12);color:#ffd98a
   <a href="#apropos">À propos</a>
   <a href="#contact">Contact</a>
 </nav>
+
 <div class="banner"><h1>Chaussures et sacs pour femme</h1></div>
+
 <main id="produits">
   <input id="q" type="search" placeholder="Rechercher un article…" aria-label="Rechercher un article">
   <div class="cats" role="group" aria-label="Catégories">
@@ -266,6 +161,7 @@ body[data-theme="dark"] #themeBtn{background:rgba(255,255,255,.12);color:#ffd98a
   <h2>Tous nos articles</h2>
   <div class="grid" id="grid"></div>
 </main>
+
 <section class="sec" id="comment">
   <h2>Comment commander</h2>
   <div class="steps">
@@ -274,19 +170,23 @@ body[data-theme="dark"] #themeBtn{background:rgba(255,255,255,.12);color:#ffd98a
     <div><b>3.</b> Ta commande arrive sur WhatsApp et la boutique te répond pour confirmer.</div>
   </div>
 </section>
+
 <section class="sec" id="apropos">
   <h2>À propos</h2>
   <p>Si’Bella Boutique vous propose des chaussures et des sacs pour femme. Commandez en quelques clics, et la boutique vous répond sur WhatsApp.</p>
 </section>
+
 <footer id="contact">
   <b>Si’Bella Boutique</b>
   <div class="links"><a id="lw" href="#">WhatsApp</a><a id="li" href="#">Instagram</a><a id="lf" href="#">Facebook</a></div>
   <small>© 2026 Si’Bella Boutique</small>
 </footer>
+
 <div id="bar" hidden>
   <button id="barInfo"><span id="barTxt"></span></button>
   <button id="barCmd">Commander</button>
 </div>
+
 <a class="help" id="help" href="#">💬 Besoin d’aide ?</a>
 <div id="over"></div>
 <aside id="drawer" aria-label="Panier">
@@ -294,5 +194,10 @@ body[data-theme="dark"] #themeBtn{background:rgba(255,255,255,.12);color:#ffd98a
   <div id="vue"></div>
 </aside>
 <div id="toast" role="status"></div>
+
 <dialog id="detail"><button class="cl" data-close aria-label="Fermer">✕</button><div id="dBody"></div></dialog>
-<dialog id="guide"><button class="cl" data-close aria-label="Fermer">✕</button><h3>Guide des pointures</h3><div id="gBody"></div><small>Valeurs indicatives. Mesure ton pied du talon au bout du plus grand orteil.</small
+<dialog id="guide"><button class="cl" data-close aria-label="Fermer">✕</button><h3>Guide des pointures</h3><div id="gBody"></div><small>Valeurs indicatives. Mesure ton pied du talon au bout du plus grand orteil.</small></dialog>
+
+<script src="app.js"></script>
+</body>
+</html>
