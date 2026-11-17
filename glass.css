@@ -1,0 +1,42 @@
+:root{--script:'Playfair Display',Georgia,serif;--sans:'Poppins','Segoe UI',Arial,sans-serif;
+--glass:rgba(255,255,255,.38);--glass-b:rgba(255,255,255,.7)}
+
+/* Fond coloré derrière le verre */
+body::before{content:"";position:fixed;inset:0;z-index:-1;
+background:radial-gradient(circle at 15% 8%,#ffbcd8 0,transparent 42%),radial-gradient(circle at 92% 38%,#f4d27a 0,transparent 38%),radial-gradient(circle at 18% 88%,#ff9fc4 0,transparent 44%),#fff1f7}
+
+/* Polices */
+h2{font-size:1.7rem;font-weight:500;font-style:italic}
+.slide h2{font-size:2rem;line-height:1.15}
+header .brand{font-size:1.3rem;font-weight:600;font-style:italic}
+#menu .mt,#drawer .top b,footer b{font-size:1.4rem;font-weight:600;font-style:italic}
+
+/* En-tête en verre */
+header{gap:6px;background:var(--glass);-webkit-backdrop-filter:blur(18px) saturate(170%);backdrop-filter:blur(18px) saturate(170%);border-bottom:1px solid var(--glass-b);box-shadow:0 8px 30px rgba(176,18,91,.12),inset 0 1px 0 rgba(255,255,255,.85)}
+header img{width:40px;height:40px}
+.hbtn,#menuBtn{width:38px;height:38px;border-radius:50%;border:1px solid var(--glass-b);background:rgba(255,255,255,.45);font-size:1rem;color:var(--magenta);display:grid;place-items:center;cursor:pointer;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 4px 12px rgba(176,18,91,.15)}
+#menuBtn{font-size:1.25rem}
+#searchBar{background:transparent}
+#q{background:var(--glass);border:1px solid var(--glass-b);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+
+/* Bandeau adresse */
+.loc{margin:12px 14px;padding:10px 16px;border-radius:999px;text-align:center;font-weight:500;font-size:.9rem;background:var(--glass);border:1px solid var(--glass-b);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 6px 18px rgba(176,18,91,.12)}
+
+/* Bandeau défilant */
+.ticker{background:rgba(74,16,48,.8);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+
+/* Cartes et catégories */
+.card{background:rgba(255,255,255,.5);border:1px solid var(--glass-b);box-shadow:0 8px 24px rgba(176,18,91,.12),inset 0 1px 0 rgba(255,255,255,.9)}
+.cat span{border:2px solid rgba(255,255,255,.85);box-shadow:0 6px 18px rgba(176,18,91,.15)}
+.steps div{background:var(--glass);border:1px solid var(--glass-b)}
+.add,#barCmd,.cta{box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 6px 18px rgba(176,18,91,.3)}
+.heart{background:rgba(255,255,255,.6);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+
+/* Panneaux en verre */
+#bar{background:rgba(255,255,255,.55);-webkit-backdrop-filter:blur(18px) saturate(170%);backdrop-filter:blur(18px) saturate(170%);border-top:1px solid var(--glass-b)}
+#drawer{background:rgba(255,255,255,.65);-webkit-backdrop-filter:blur(20px) saturate(170%);backdrop-filter:blur(20px) saturate(170%);border-left:1px solid var(--glass-b)}
+dialog{background:rgba(255,255,255,.72);-webkit-backdrop-filter:blur(20px) saturate(170%);backdrop-filter:blur(20px) saturate(170%);border:1px solid var(--glass-b)}
+.help{background:rgba(37,211,102,.78);border:1px solid rgba(255,255,255,.6);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+
+/* Menu : s'ouvre à droite, près du panier */
+#menu{left:auto;right:0;transform:translateX(100%);background:rgba(255,255,255,.65);-webkit-backdrop-filter:blur(20px) saturate(170%);backdrop-filter:blur(20px) saturate(170%);border-left:1px solid var(--glass-b)}
