@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -24,7 +25,12 @@ button.sec{background:#fff;color:var(--ink);border:2px solid var(--gold)}
 button.del{background:#8a1c1c}
 button:disabled{opacity:.6}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-#prev{width:120px;height:120px;object-fit:cover;border-radius:12px;margin-top:8px;background:var(--rose)}
+#prev{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.ph{position:relative;width:96px}
+.ph img{width:96px;height:96px;object-fit:cover;border-radius:12px;background:var(--rose);display:block}
+.ph .x{position:absolute;top:-6px;right:-6px;width:26px;height:26px;padding:0;border-radius:50%;background:#8a1c1c;font-size:.9rem;line-height:1}
+.ph .p{display:block;margin-top:4px;text-align:center;font-size:.72rem;font-weight:600;color:var(--mag)}
+.ph .mk{display:block;width:100%;margin-top:4px;padding:3px 0;font-size:.72rem;border-radius:8px;background:#fff;color:var(--ink);border:1px solid var(--gold)}
 .item{display:grid;grid-template-columns:64px 1fr;gap:10px;padding:10px 0;border-bottom:1px solid var(--rose)}
 .item img{width:64px;height:64px;object-fit:cover;border-radius:10px;background:var(--rose)}
 .acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
@@ -53,8 +59,8 @@ button:disabled{opacity:.6}
   <section>
     <h2 id="titreForm">Ajouter un article</h2>
     <form id="fp">
-      <label>Photo<input id="photo" type="file" accept="image/*"></label>
-      <img id="prev" alt="" hidden>
+      <label>Photos (5 maximum, la première est la photo principale)<input id="photo" type="file" accept="image/*" multiple></label>
+      <div id="prev" hidden></div>
       <label>Nom de l’article<input id="nom" required></label>
       <div class="row2">
         <label>Prix (FCFA)<input id="prix" type="number" min="0" inputmode="numeric" required></label>
@@ -98,7 +104,8 @@ const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const msg=(el,t,ok)=>{el.textContent=t;el.className="msg "+(ok?"ok":"err")};
 const fmt=n=>Number(n).toLocaleString("fr-FR")+" FCFA";
-let LISTE=[],editId=null,photoActuelle="";
+const MAX=5;
+let LISTE=[],editId=null,items=[],originales=[];
 
 /* ---- Connexion ---- */
 async function demarrer(){
@@ -126,10 +133,25 @@ function compress(file){return new Promise((ok,ko)=>{
     c.toBlob(b=>b?ok(b):ko(new Error("Compression impossible")),"image/jpeg",.8)};
   img.onerror=()=>ko(new Error("Image illisible"));img.src=u})}
 const chemin=u=>{const i=String(u).indexOf("/photos/");return i<0?null:decodeURIComponent(u.slice(i+8))};
-const retirer=u=>{const c=chemin(u);return c?sb.storage.from("photos").remove([c]):null};
+const retirer=urls=>{const c=urls.map(chemin).filter(Boolean);return c.length?sb.storage.from("photos").remove(c):null};
+const photosDe=p=>p.photos&&p.photos.length?p.photos:(p.photo?[p.photo]:[]);
+
+function renderPrev(){
+  $("#prev").innerHTML=items.map((it,i)=>`<div class="ph"><img src="${esc(it.prev)}" alt=""><button type="button" class="x" data-rm="${i}" aria-label="Retirer">✕</button>${i===0?'<span class="p">Principale</span>':`<button type="button" class="mk" data-mk="${i}">Principale</button>`}</div>`).join("");
+  $("#prev").hidden=!items.length;
+}
 $("#photo").addEventListener("change",()=>{
-  const f=$("#photo").files[0];
-  if(f){$("#prev").src=URL.createObjectURL(f);$("#prev").hidden=false}
+  const files=[...$("#photo").files];
+  for(const f of files){
+    if(items.length>=MAX){msg($("#mp"),MAX+" photos maximum par article.");break}
+    items.push({file:f,prev:URL.createObjectURL(f)});
+  }
+  $("#photo").value="";renderPrev();
+});
+$("#prev").addEventListener("click",e=>{
+  const r=e.target.closest("[data-rm]"),m=e.target.closest("[data-mk]");
+  if(r){items.splice(+r.dataset.rm,1);renderPrev()}
+  else if(m){const it=items.splice(+m.dataset.mk,1)[0];items.unshift(it);renderPrev()}
 });
 
 /* ---- Articles ---- */
@@ -137,16 +159,19 @@ async function chargerListe(){
   const {data,error}=await sb.from("produits").select("*").order("created_at",{ascending:false});
   if(error){$("#liste").textContent="Erreur : "+error.message;return}
   LISTE=data;$("#nb").textContent=data.length;
-  $("#liste").innerHTML=data.length?data.map(p=>`<div class="item"><img src="${esc(p.photo)}" alt=""><div><b>${esc(p.nom)}</b><br>${fmt(p.prix)} · ${esc(p.categorie)}${p.epuise?" · <b>Épuisé</b>":""}${p.populaire?" · ★":""}<div class="acts"><button class="sec" data-e="${p.id}">Modifier</button><button class="sec" data-s="${p.id}">${p.epuise?"Remettre en stock":"Marquer épuisé"}</button><button class="del" data-d="${p.id}">Supprimer</button></div></div></div>`).join(""):"<p>Aucun article pour l’instant.</p>";
+  $("#liste").innerHTML=data.length?data.map(p=>{const n=photosDe(p).length;
+    return `<div class="item"><img src="${esc(p.photo)}" alt=""><div><b>${esc(p.nom)}</b><br>${fmt(p.prix)} · ${esc(p.categorie)} · ${n} photo${n>1?"s":""}${p.epuise?" · <b>Épuisé</b>":""}${p.populaire?" · ★":""}<div class="acts"><button class="sec" data-e="${p.id}">Modifier</button><button class="sec" data-s="${p.id}">${p.epuise?"Remettre en stock":"Marquer épuisé"}</button><button class="del" data-d="${p.id}">Supprimer</button></div></div></div>`}).join(""):"<p>Aucun article pour l’instant.</p>";
 }
 function remplir(p){
-  editId=p?p.id:null;photoActuelle=p?p.photo||"":"";
+  editId=p?p.id:null;
+  originales=p?photosDe(p):[];
+  items=originales.map(u=>({url:u,prev:u}));
   $("#nom").value=p?p.nom:"";$("#prix").value=p?p.prix:"";$("#ancien").value=p&&p.ancien_prix?p.ancien_prix:"";
   $("#cat").value=p?p.categorie:"chaussures";$("#couleurs").value=p?p.couleurs||"":"";
   $("#pointures").value=p?p.pointures||"":"";$("#cm").value=p?p.cm||"":"";
   $("#etiq").value=p?p.etiquette||"":"";$("#desc").value=p?p.description||"":"";
   $("#pop").checked=!!(p&&p.populaire);$("#epuise").checked=!!(p&&p.epuise);
-  $("#photo").value="";$("#prev").src=photoActuelle;$("#prev").hidden=!photoActuelle;
+  $("#photo").value="";renderPrev();
   $("#titreForm").textContent=p?"Modifier l’article":"Ajouter un article";
   $("#bsave").textContent=p?"Enregistrer les modifications":"Publier";$("#cancel").hidden=!p;
 }
@@ -154,24 +179,33 @@ $("#cancel").addEventListener("click",()=>{remplir(null);msg($("#mp"),"",true)})
 
 $("#fp").addEventListener("submit",async e=>{
   e.preventDefault();const b=$("#bsave");b.disabled=true;msg($("#mp"),"Envoi en cours…",true);
+  const nouvelles=[];
   try{
-    let url=photoActuelle;const f=$("#photo").files[0],ancienneUrl=photoActuelle;
-    if(f){
-      const blob=await compress(f),nom=Date.now()+"-"+Math.random().toString(36).slice(2,8)+".jpg";
+    if(!items.length)throw new Error("Choisis au moins une photo.");
+    const urls=[];
+    for(let i=0;i<items.length;i++){
+      const it=items[i];
+      if(it.url){urls.push(it.url);continue}
+      msg($("#mp"),"Envoi de la photo "+(i+1)+" sur "+items.length+"…",true);
+      const blob=await compress(it.file),nom=Date.now()+"-"+i+"-"+Math.random().toString(36).slice(2,8)+".jpg";
       const {error}=await sb.storage.from("photos").upload(nom,blob,{contentType:"image/jpeg"});
       if(error)throw error;
-      url=sb.storage.from("photos").getPublicUrl(nom).data.publicUrl;
+      const u=sb.storage.from("photos").getPublicUrl(nom).data.publicUrl;
+      nouvelles.push(u);urls.push(u);
     }
-    if(!url)throw new Error("Choisis une photo.");
     const row={nom:$("#nom").value.trim(),prix:parseInt($("#prix").value)||0,ancien_prix:parseInt($("#ancien").value)||0,
-      categorie:$("#cat").value,photo:url,couleurs:$("#couleurs").value.trim(),pointures:$("#pointures").value.trim(),
+      categorie:$("#cat").value,photo:urls[0],photos:urls,couleurs:$("#couleurs").value.trim(),pointures:$("#pointures").value.trim(),
       cm:$("#cm").value.trim(),populaire:$("#pop").checked,etiquette:$("#etiq").value||null,
       epuise:$("#epuise").checked,description:$("#desc").value.trim()};
     const q=editId?sb.from("produits").update(row).eq("id",editId):sb.from("produits").insert(row);
     const {error}=await q;if(error)throw error;
-    if(f&&editId&&ancienneUrl)await retirer(ancienneUrl);
+    const retirees=originales.filter(u=>!urls.includes(u));
+    if(retirees.length)await retirer(retirees);
     remplir(null);msg($("#mp"),"Article enregistré ✓",true);chargerListe();
-  }catch(err){msg($("#mp"),"Erreur : "+(err.message||err))}
+  }catch(err){
+    if(nouvelles.length)await retirer(nouvelles);
+    msg($("#mp"),"Erreur : "+(err.message||err));
+  }
   b.disabled=false;
 });
 
@@ -185,7 +219,7 @@ $("#liste").addEventListener("click",async e=>{
     if(!confirm("Supprimer « "+p.nom+" » ? Cette action est définitive."))return;
     const {error}=await sb.from("produits").delete().eq("id",p.id);
     if(error){alert("Erreur : "+error.message);return}
-    await retirer(p.photo);chargerListe()}
+    await retirer(photosDe(p));chargerListe()}
 });
 
 /* ---- Frais de livraison ---- */
@@ -214,4 +248,4 @@ $("#zadd").addEventListener("click",async()=>{
 demarrer();
 </script>
 </body>
-                        </html>z
+</html>
