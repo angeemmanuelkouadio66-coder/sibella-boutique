@@ -5,20 +5,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Si’Bella Boutique — Chaussures et sacs pour femme</title>
-<meta name="description" content="Si’Bella Boutique : chaussures et sacs pour femme. Commandez facilement sur WhatsApp.">
+<meta name="description" content="Si’Bella Boutique à Cocody Angré 22e : chaussures et sacs pour femme. Commandez facilement sur WhatsApp.">
 <link rel="icon" href="images/logo.jpg">
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="glass.css">
 </head>
 <body>
 
 <header id="top">
-  <button id="menuBtn" aria-label="Ouvrir le menu">☰</button>
   <img src="images/logo.jpg" alt="Logo Si’Bella Boutique">
   <span class="brand">Si’Bella</span>
   <button class="hbtn" id="searchBtn" aria-label="Rechercher">🔍</button>
   <button class="hbtn" id="favBtn" aria-label="Mes favoris">♡</button>
   <button class="hbtn" id="cartBtn" aria-label="Ouvrir le panier">🛍<span id="count">0</span></button>
+  <button id="menuBtn" aria-label="Ouvrir le menu">☰</button>
 </header>
 
 <div id="searchBar" hidden>
@@ -32,7 +33,7 @@
   <a href="#produits" data-cat="sacs">Sacs</a>
   <a href="#bestBox" data-cat="tous">Meilleures ventes</a>
   <a href="#produits" data-cat="favoris">♥ Mes favoris</a>
-  <a href="#comment">Comment commander</a>
+  <a href="#" data-how>Comment commander</a>
   <a href="#apropos">À propos</a>
   <a href="#contact">Contact</a>
 </nav>
@@ -55,11 +56,13 @@
       <span class="pill">Si’Bella Boutique</span>
       <h2>Commande facile</h2>
       <p>Ajoute au panier, remplis tes infos, et ta commande arrive sur WhatsApp.</p>
-      <a class="cta" href="#comment">Comment commander</a>
+      <a class="cta" href="#" data-how>Comment commander</a>
     </div>
   </div>
   <div class="dots"></div>
 </section>
+
+<div class="loc">📍 Nous sommes situés à Cocody Angré 22e</div>
 
 <div class="ticker" aria-hidden="true">
   <div class="tk">
@@ -81,22 +84,15 @@
   <div class="grid" id="grid"></div>
 </main>
 
-<section class="sec" id="comment">
-  <h2>Comment commander</h2>
-  <div class="steps">
-    <div><b>1.</b> Choisis tes articles et appuie sur « Ajouter au panier ».</div>
-    <div><b>2.</b> Appuie sur « Commander » et remplis ton adresse, ta pointure et ta couleur.</div>
-    <div><b>3.</b> Ta commande arrive sur WhatsApp et la boutique te répond pour confirmer.</div>
-  </div>
-</section>
-
 <section class="sec" id="apropos">
   <h2>À propos</h2>
   <p>Si’Bella Boutique vous propose des chaussures et des sacs pour femme. Commandez en quelques clics, et la boutique vous répond sur WhatsApp.</p>
+  <p style="margin-top:10px">📍 Cocody Angré 22e</p>
 </section>
 
 <footer id="contact">
   <b>Si’Bella Boutique</b>
+  <p style="margin-top:6px">📍 Cocody Angré 22e</p>
   <div class="links"><a id="lw" href="#">WhatsApp</a><a id="li" href="#">Instagram</a><a id="lf" href="#">Facebook</a></div>
   <small>© 2026 Si’Bella Boutique</small>
 </footer>
@@ -116,8 +112,23 @@
 
 <dialog id="detail"><button class="cl" data-close aria-label="Fermer">✕</button><div id="dBody"></div></dialog>
 <dialog id="guide"><button class="cl" data-close aria-label="Fermer">✕</button><h3>Guide des pointures</h3><div id="gBody"></div><small>Valeurs indicatives. Mesure ton pied du talon au bout du plus grand orteil.</small></dialog>
+<dialog id="how">
+  <button class="cl" data-close aria-label="Fermer">✕</button>
+  <h2 class="center" style="margin-top:0">Comment commander</h2>
+  <div class="steps">
+    <div><b>1.</b> Choisis tes articles et appuie sur « Ajouter au panier ».</div>
+    <div><b>2.</b> Appuie sur « Commander » et remplis ton adresse, ta pointure et ta couleur.</div>
+    <div><b>3.</b> Ta commande arrive sur WhatsApp et la boutique te répond pour confirmer.</div>
+  </div>
+</dialog>
 
 <script src="app.js"></script>
 <script src="extra.js"></script>
+<script>
+document.addEventListener("click",function(e){
+  var h=e.target.closest("[data-how]");
+  if(h){e.preventDefault();document.body.classList.remove("menu");document.getElementById("how").showModal()}
+});
+</script>
 </body>
 </html>
