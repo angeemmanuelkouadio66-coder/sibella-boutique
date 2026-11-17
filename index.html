@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Si’Bella Boutique — Chaussures et sacs pour femme</title>
+<meta name="description" content="Si’Bella Boutique : chaussures et sacs pour femme. Commandez facilement sur WhatsApp.">
+<link rel="icon" href="images/logo.jpg">
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--blush:#fff1f7;--rose-soft:#ffd3e4;--magenta:#b0125b;--gold:#c99a2e;--gold-light:#f4d27a;--ink:#4a1030;
+--script:'Great Vibes','Brush Script MT',cursive;--sans:'Jost','Segoe UI',Arial,sans-serif}
+*{box-sizing:border-box;margin:0}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--ink);background:var(--blush);line-height:1.5}
+button,input,textarea,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--magenta);outline-offset:2px}
+
+header{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:10px;padding:8px 14px;background:rgba(255,241,247,.95);backdrop-filter:blur(8px);border-bottom:2px solid var(--gold-light)}
+header img{width:46px;height:46px;border-radius:50%;border:2px solid var(--gold);animation:float 5s ease-in-out infinite}
+header .brand{font-family:var(--script);font-size:1.8rem;color:var(--magenta);flex:1}
+#cartBtn{position:relative;border:0;background:var(--magenta);color:#fff;border-radius:999px;padding:9px 16px;font-weight:600;cursor:pointer}
+#count{display:inline-block;min-width:22px;margin-left:6px;padding:0 6px;border-radius:999px;background:var(--gold-light);color:var(--ink);font-size:.85rem}
+#cartBtn.bump{animation:bump .4s}
+@keyframes bump{50%{transform:scale(1.2)}}
+@keyframes float{50%{transform:translateY(-4px)}}
+
+.banner{text-align:center;padding:22px 16px;background:linear-gradient(120deg,var(--rose-soft),#fff,var(--rose-soft));background-size:200% 100%;animation:shine 8s linear infinite}
+.banner h1{font-family:var(--script);font-weight:400;font-size:clamp(2rem,8vw,3rem);color:var(--magenta)}
+@keyframes shine{to{background-position:-200% 0}}
+
+main{max-width:1000px;margin:0 auto;padding:16px 14px 40px}
+#q{width:100%;padding:12px 18px;border-radius:999px;border:2px solid var(--gold-light);background:#fff}
+.cats{display:flex;gap:16px;justify-content:center;margin:18px 0}
+.cat{border:0;background:none;cursor:pointer;font-weight:500;display:flex;flex-direction:column;align-items:center;gap:6px}
+.cat span{width:78px;height:78px;border-radius:50%;overflow:hidden;border:3px solid var(--gold-light);background:var(--rose-soft);transition:border-color .2s,transform .2s}
+.cat.on span{border-color:var(--magenta);transform:scale(1.08)}
+.cat img{width:100%;height:100%;object-fit:cover}
+h2{font-family:var(--script);font-weight:400;font-size:2rem;color:var(--magenta);margin:14px 0 10px}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px}
+.row{display:flex;overflow-x:auto;gap:14px;padding-bottom:8px;scroll-snap-type:x mandatory}
+.row .card{flex:0 0 190px;scroll-snap-align:start}
+.card{background:#fff;border:2px solid var(--gold-light);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;animation:rise .5s both}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}}
+.pic{aspect-ratio:1/1;overflow:hidden;background:var(--rose-soft);position:relative}
+.pic img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.card:hover .pic img{transform:scale(1.07)}
+.info{padding:12px;display:flex;flex-direction:column;gap:3px;flex:1}
+.info h3{font-size:1rem;font-weight:600;cursor:pointer}
+.price{color:var(--magenta);font-weight:600;font-size:1.05rem}
+.price s{font-size:.85rem;font-weight:400;opacity:.6;margin-left:4px}
+.meta{font-size:.85rem;opacity:.85}
+.add{margin-top:auto;width:100%;border:0;border-radius:12px;padding:11px;font-weight:600;color:#fff;background:linear-gradient(135deg,var(--magenta),#d6337f);cursor:pointer;transition:transform .15s}
+.add:active{transform:scale(.96)}
+.add:disabled{background:#bbb;cursor:not-allowed}
+.vide{text-align:center;padding:24px;opacity:.8}
+
+.tag{position:absolute;top:8px;left:8px;background:var(--gold);color:var(--ink);font-size:.75rem;font-weight:600;padding:3px 10px;border-radius:999px}
+.tag.out{top:auto;bottom:8px;background:var(--ink);color:#fff}
+.heart{position:absolute;top:6px;right:6px;width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.9);font-size:1.3rem;color:var(--magenta);cursor:pointer}
+.heart.on{animation:bump .4s}
+.card.out img{filter:grayscale(1);opacity:.6}
+
+#over{position:fixed;inset:0;background:rgba(74,16,48,.5);opacity:0;pointer-events:none;transition:opacity .3s;z-index:8}
+#drawer{position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);background:#fff;z-index:9;transform:translateX(100%);transition:transform .3s;display:flex;flex-direction:column}
+body.open #drawer{transform:none}
+body.open #over,body.menu #over{opacity:1;pointer-events:auto}
+#drawer .top{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:2px solid var(--gold-light)}
+#drawer .top b{font-family:var(--script);font-size:1.8rem;font-weight:400;color:var(--magenta)}
+#x{border:0;background:none;font-size:1.6rem;cursor:pointer}
+#vue{padding:14px 16px;overflow-y:auto;flex:1}
+.line{display:grid;grid-template-columns:56px 1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--rose-soft)}
+.line img{width:56px;height:56px;border-radius:10px;object-fit:cover}
+.qty{display:flex;align-items:center;gap:8px}
+.qty button{width:30px;height:30px;border-radius:50%;border:2px solid var(--gold);background:none;cursor:pointer;font-weight:600}
+.tot{font-weight:600;font-size:1.15rem;text-align:right;margin:14px 0}
+form label{display:block;margin:8px 0 2px;font-weight:500}
+form input,form textarea,form select{width:100%;padding:10px 12px;border:2px solid var(--gold-light);border-radius:10px;background:#fff}
+form fieldset{border:2px solid var(--rose-soft);border-radius:12px;padding:6px 12px 12px;margin-top:14px}
+form legend{font-weight:600;color:var(--magenta);padding:0 6px}
+form small{opacity:.75}
+.back{margin-top:10px;width:100%;border:2px solid var(--gold);background:none;border-radius:12px;padding:10px;cursor:pointer}
+
+#toast{position:fixed;left:50%;bottom:90px;transform:translate(-50%,20px);background:var(--ink);color:#fff;padding:10px 18px;border-radius:999px;opacity:0;transition:.3s;z-index:12;pointer-events:none}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+.help{position:fixed;right:14px;bottom:14px;z-index:6;display:flex;align-items:center;gap:8px;padding:12px 18px;border-radius:999px;background:#25d366;color:#fff;font-weight:600;text-decoration:none;box-shadow:0 6px 20px rgba(0,0,0,.25);animation:pulse 2.2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(37,211,102,.6)}70%{box-shadow:0 0 0 16px rgba(37,211,102,0)}100%{box-shadow:0 0 0 0 rgba(37,211,102,0)}}
+
+footer{text-align:center;padding:30px 16px 90px;background:var(--ink);color:#fff}
+footer b{font-family:var(--script);font-size:2rem;font-weight:400;color:var(--gold-light)}
+footer .links{display:flex;gap:12px;justify-content:center;margin:12px 0;flex-wrap:wrap}
+footer .links a{padding:8px 18px;border:2px solid var(--gold-light);border-radius:999px;color:#fff;text-decoration:none}
+
+#produits,#bestBox,#comment,#apropos,#contact{scroll-margin-top:72px}
+#menuBtn{border:0;background:none;font-size:1.7rem;cursor:pointer;color:var(--magenta)}
+#menu{position:fixed;top:0;left:0;bottom:0;width:min(300px,85%);background:#fff;z-index:9;transform:translateX(-100%);transition:transform .3s;display:flex;flex-direction:column;padding:18px}
+body.menu #menu{transform:none}
+#menu .mt{font-family:var(--script);font-size:2rem;color:var(--magenta);margin-bottom:8px}
+#menu a{padding:14px 6px;border-bottom:1px solid var(--rose-soft);text-decoration:none;color:var(--ink);font-weight:500;font-size:1.05rem}
+#menu a:hover{color:var(--magenta)}
+.sec{max-width:800px;margin:0 auto;padding:28px 16px;text-align:center}
+.steps{display:grid;gap:12px;margin-top:12px;text-align:left}
+.steps div{background:#fff;border:2px solid var(--gold-light);border-radius:14px;padding:12px 14px}
+.steps b{color:var(--magenta)}
+#bar{position:fixed;left:0;right:0;bottom:0;z-index:7;display:flex;gap:10px;align-items:center;padding:10px 14px;background:#fff;border-top:3px solid var(--gold);box-shadow:0 -6px 20px rgba(74,16,48,.2);animation:up .3s}
+@keyframes up{from{transform:translateY(100%)}}
+#barInfo{flex:1;border:0;background:none;text-align:left;font-weight:600;cursor:pointer}
+#barCmd{border:0;border-radius:12px;padding:12px 22px;font-weight:600;color:#fff;background:linear-gradient(135deg,var(--magenta),#d6337f);cursor:pointer}
+body.has .help{bottom:84px}
+body.has #toast{bottom:150px}
+body.has footer{padding-bottom:150px}
+body.open #bar,body.menu #bar{display:none}
+
+dialog{border:0;border-radius:18px;width:min(440px,94vw);max-height:90vh;padding:16px;color:var(--ink);background:#fff}
+dialog::backdrop{background:rgba(74,16,48,.55)}
+.cl{position:absolute;top:8px;right:10px;border:0;background:none;font-size:1.5rem;cursor:pointer}
+.dimg{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:14px;margin-bottom:10px}
+#dBody{display:flex;flex-direction:column;gap:6px}
+.link{border:0;background:none;color:var(--magenta);text-decoration:underline;cursor:pointer;text-align:left;padding:0}
+table.g{width:100%;border-collapse:collapse;margin:10px 0}
+table.g th,table.g td{border:1px solid var(--rose-soft);padding:8px;text-align:center}
+table.g th{background:var(--rose-soft)}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<header id="top">
+  <button id="menuBtn" aria-label="Ouvrir le menu">☰</button>
+  <img src="images/logo.jpg" alt="Logo Si’Bella Boutique">
+  <span class="brand">Si’Bella</span>
+  <button id="cartBtn" aria-label="Ouvrir le panier">🛒 Panier<span id="count">0</span></button>
+</header>
+
+<nav id="menu" aria-label="Menu">
+  <div class="mt">Si’Bella Boutique</div>
+  <a href="#top" data-cat="tous">Accueil</a>
+  <a href="#produits" data-cat="chaussures">Chaussures</a>
+  <a href="#produits" data-cat="sacs">Sacs</a>
+  <a href="#bestBox" data-cat="tous">Meilleures ventes</a>
+  <a href="#produits" data-cat="favoris">♥ Mes favoris</a>
+  <a href="#comment">Comment commander</a>
+  <a href="#apropos">À propos</a>
+  <a href="#contact">Contact</a>
+</nav>
+
+<div class="banner"><h1>Chaussures et sacs pour femme</h1></div>
+
+<main id="produits">
+  <input id="q" type="search" placeholder="Rechercher un article…" aria-label="Rechercher un article">
+  <div class="cats" role="group" aria-label="Catégories">
+    <button class="cat on" data-cat="tous"><span><img alt=""></span>Tous</button>
+    <button class="cat" data-cat="chaussures"><span><img alt=""></span>Chaussures</button>
+    <button class="cat" data-cat="sacs"><span><img alt=""></span>Sacs</button>
+  </div>
+  <section id="bestBox"><h2>Meilleures ventes 🏆</h2><div class="row" id="best"></div></section>
+  <h2>Tous nos articles</h2>
+  <div class="grid" id="grid"></div>
+</main>
+
+<section class="sec" id="comment">
+  <h2>Comment commander</h2>
+  <div class="steps">
+    <div><b>1.</b> Choisis tes articles et appuie sur « Ajouter au panier ».</div>
+    <div><b>2.</b> Appuie sur « Commander » et remplis ton adresse, ta pointure et ta couleur.</div>
+    <div><b>3.</b> Ta commande arrive sur WhatsApp et la boutique te répond pour confirmer.</div>
+  </div>
+</section>
+
+<section class="sec" id="apropos">
+  <h2>À propos</h2>
+  <p>Si’Bella Boutique vous propose des chaussures et des sacs pour femme. Commandez en quelques clics, et la boutique vous répond sur WhatsApp.</p>
+</section>
+
+<footer id="contact">
+  <b>Si’Bella Boutique</b>
+  <div class="links"><a id="lw" href="#">WhatsApp</a><a id="li" href="#">Instagram</a><a id="lf" href="#">Facebook</a></div>
+  <small>© 2026 Si’Bella Boutique</small>
+</footer>
+
+<div id="bar" hidden>
+  <button id="barInfo"><span id="barTxt"></span></button>
+  <button id="barCmd">Commander</button>
+</div>
+
+<a class="help" id="help" href="#">💬 Besoin d’aide ?</a>
+<div id="over"></div>
+<aside id="drawer" aria-label="Panier">
+  <div class="top"><b>Mon panier</b><button id="x" aria-label="Fermer">✕</button></div>
+  <div id="vue"></div>
+</aside>
+<div id="toast" role="status"></div>
+
+<dialog id="detail"><button class="cl" data-close aria-label="Fermer">✕</button><div id="dBody"></div></dialog>
+<dialog id="guide"><button class="cl" data-close aria-label="Fermer">✕</button><h3>Guide des pointures</h3><div id="gBody"></div><small>Valeurs indicatives. Mesure ton pied du talon au bout du plus grand orteil.</small></dialog>
+
+<script>
+/* ===== RÉGLAGES ===== */
+const BOUTIQUE = {
+  whatsapp: "2250757561119",
+  instagram: "https://www.instagram.com/sibellaboutique42",
+  facebook: "https://www.facebook.com/share/1ddSU5TTLD/",
+  supabaseUrl: "https://swxtcfrhonijjcsbrldg.supabase.co",
+  supabaseKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN3eHRjZnJob25pampjc2JybGRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ3NjUyNTUsImV4cCI6MjExMDM0MTI1NX0.MfA87LwUJWZpfg6dlkf5pSgPnJWCeKVuA4hTDbkoTMg",
+  livraison: [
+    {zone:"Yopougon",prix:1500},{zone:"Cocody",prix:1500},{zone:"Abobo",prix:1500},
+    {zone:"Koumassi",prix:1500},{zone:"Treichville",prix:1500},{zone:"Adjamé",prix:1500},
+    {zone:"Attécoubé",prix:1500},{zone:"Marcory",prix:1500},{zone:"Plateau",prix:1500},
+    {zone:"Port-Bouët",prix:1500},{zone:"Bingerville",prix:2000},{zone:"N'Dotré",prix:2000},
+    {zone:"Grand-Bassam",prix:3000},{zone:"Anyama",prix:null},{zone:"Songon",prix:null},
+    {zone:"Expédition",prix:3000}
+  ]
+};
+const GUIDE = [["36","23"],["37","23,5"],["38","24,5"],["39","25"],["40","25,5"],["41","26"]];
+
+/* ===== LOGIQUE ===== */
+const $=s=>document.querySelector(s);
+const money=n=>n.toLocaleString("fr-FR")+" FCFA";
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const slug=s=>String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+const vide="data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="#ffd3e4"/><text x="100" y="118" font-size="56" text-anchor="middle" fill="#c99a2e">✦</text></svg>');
+let PRODUITS=[],ZONES=BOUTIQUE.livraison,cat="tous",cart={},fav=[];
+try{cart=JSON.parse(localStorage.getItem("sb_cart")||"{}")}catch(e){}
+try{fav=JSON.parse(localStorage.getItem("sb_fav")||"[]")}catch(e){}
+const save=()=>{try{localStorage.setItem("sb_cart",JSON.stringify(cart))}catch(e){}};
+const saveFav=()=>{try{localStorage.setItem("sb_fav",JSON.stringify(fav))}catch(e){}};
+const lignes=()=>Object.keys(cart).map(id=>({p:PRODUITS.find(x=>x.id===id),q:cart[id]})).filter(l=>l.p);
+const total=()=>lignes().reduce((s,l)=>s+l.p.prix*l.q,0);
+const wa=txt=>"https://wa.me/"+BOUTIQUE.whatsapp+"?text="+encodeURIComponent(txt);
+const liste=s=>String(s||"").split(",").map(x=>x.trim()).filter(Boolean);
+
+/* ---- Chargement depuis Supabase ---- */
+const norm=p=>({id:p.id||slug(p.nom),nom:p.nom,prix:p.prix,ancien:p.ancien||0,cat:p.cat,
+  photo:/^(https?:|images\/)/.test(p.photo)?p.photo:"images/"+p.photo,
+  couleurs:p.couleurs||"",pointures:p.pointures||"",cm:p.cm||"",best:!!p.best,
+  etiquette:p.etiquette||"",epuise:!!p.epuise,description:p.description||""});
+
+async function charger(){
+  const base=BOUTIQUE.supabaseUrl+"/rest/v1/";
+  const H={apikey:BOUTIQUE.supabaseKey,Authorization:"Bearer "+BOUTIQUE.supabaseKey};
+  try{
+    const [a,b]=await Promise.all([
+      fetch(base+"produits?select=*&order=created_at.desc",{headers:H}),
+      fetch(base+"livraison?select=zone,prix&order=id.asc",{headers:H})]);
+    if(!a.ok)throw new Error("produits");
+    PRODUITS=(await a.json()).map(o=>norm({id:o.id,nom:o.nom,prix:o.prix,ancien:o.ancien_prix,
+      cat:o.categorie,photo:o.photo||"",couleurs:o.couleurs,pointures:o.pointures,cm:o.cm,
+      best:o.populaire,etiquette:o.etiquette,epuise:o.epuise,description:o.description}));
+    if(b.ok){const Z=await b.json();if(Z.length)ZONES=Z}
+  }catch(e){PRODUITS=[];toast("Connexion impossible, réessaie.")}
+}
+
+/* ---- Affichage ---- */
+const prixHtml=p=>`<div class="price">${money(p.prix)}${p.ancien>p.prix?` <s>${money(p.ancien)}</s>`:""}</div>`;
+const metas=p=>(p.couleurs?`<div class="meta">Couleurs : ${esc(p.couleurs)}</div>`:"")+(p.pointures?`<div class="meta">Pointures : ${esc(p.pointures)}</div>`:"")+(p.cm?`<div class="meta">Pied : ${esc(p.cm)} cm</div>`:"");
+const btnAdd=p=>`<button class="add" data-id="${p.id}"${p.epuise?" disabled":""}>${p.epuise?"Indisponible":"Ajouter au panier"}</button>`;
+const card=(p,i)=>{const f=fav.includes(p.id);
+  return `<article class="card${p.epuise?" out":""}" style="animation-delay:${i*0.06}s"><div class="pic" data-open="${p.id}"><img src="${esc(p.photo)}" alt="${esc(p.nom)}" loading="lazy" onerror="this.onerror=null;this.src=vide">${p.etiquette?`<span class="tag">${esc(p.etiquette)}</span>`:""}${p.epuise?`<span class="tag out">Épuisé</span>`:""}<button class="heart${f?" on":""}" data-fav="${p.id}" aria-label="Favori">${f?"♥":"♡"}</button></div><div class="info"><h3 data-open="${p.id}">${esc(p.nom)}</h3>${prixHtml(p)}${metas(p)}${btnAdd(p)}</div></article>`};
+
+function render(){
+  const q=$("#q").value.trim().toLowerCase();
+  const L=PRODUITS.filter(p=>(cat==="tous"||(cat==="favoris"?fav.includes(p.id):p.cat===cat))&&p.nom.toLowerCase().includes(q));
+  $("#grid").innerHTML=L.length?L.map(card).join(""):"<p class='vide'>"+(cat==="favoris"?"Tu n’as pas encore de favoris. Appuie sur le cœur d’un article.":"Aucun article trouvé.")+"</p>";
+  const best=PRODUITS.filter(p=>p.best);
+  $("#bestBox").hidden=!(cat==="tous"&&!q&&best.length);
+  $("#best").innerHTML=best.map(card).join("");
+}
+function setCat(c){
+  cat=c;
+  document.querySelectorAll(".cat").forEach(x=>x.classList.toggle("on",x.dataset.cat===c));
+  render();
+}
+function detail(id){
+  const p=PRODUITS.find(x=>x.id===id);if(!p)return;
+  $("#dBody").innerHTML=`<img class="dimg" src="${esc(p.photo)}" alt="${esc(p.nom)}" onerror="this.onerror=null;this.src=vide"><h3>${esc(p.nom)}</h3>${prixHtml(p)}${p.etiquette?`<div class="meta"><b>${esc(p.etiquette)}</b></div>`:""}${p.description?`<p>${esc(p.description)}</p>`:""}${metas(p)}${p.cat==="chaussures"?`<button class="link" data-guide>Guide des pointures</button>`:""}${btnAdd(p)}`;
+  $("#detail").showModal();
+}
+
+function toast(t){const e=$("#toast");e.textContent=t;e.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove("show"),1600)}
+function maj(){
+  const n=lignes().reduce((s,l)=>s+l.q,0);
+  $("#count").textContent=n;
+  $("#barTxt").textContent=n+(n>1?" articles":" article")+" · "+money(total());
+  $("#bar").hidden=n===0;
+  document.body.classList.toggle("has",n>0);
+  if(document.body.classList.contains("open")&&$("#f")===null)renderCart();
+}
+function renderCart(){
+  const L=lignes();
+  $("#vue").innerHTML=L.length
+    ?L.map(l=>`<div class="line"><img src="${esc(l.p.photo)}" alt="" onerror="this.onerror=null;this.src=vide"><div><b>${esc(l.p.nom)}</b><br>${money(l.p.prix)}</div><div class="qty"><button data-d="-1" data-id="${l.p.id}" aria-label="Moins">−</button><span>${l.q}</span><button data-d="1" data-id="${l.p.id}" aria-label="Plus">+</button></div></div>`).join("")+`<div class="tot">Articles : ${money(total())}</div><button class="add" id="cmd">Commander</button>`
+    :"<p class='vide'>Ton panier est vide.</p>";
+}
+function choix(nom,label,opts,attrs){
+  return opts.length
+    ?`<label>${label}<select name="${nom}" required><option value="">Choisir…</option>${opts.map(o=>`<option>${esc(o)}</option>`).join("")}</select></label>`
+    :`<label>${label}<input name="${nom}"2
