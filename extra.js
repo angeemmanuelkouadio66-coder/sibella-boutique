@@ -30,9 +30,8 @@ document.getElementById("favBtn").addEventListener("click",()=>{
   document.getElementById("produits").scrollIntoView({behavior:"smooth"});
 });
 
-/* Nous trouver (Google Maps) */
+/* Styles ajoutés */
 (function(){
-  const MAPS="https://maps.app.goo.gl/vLy6uV2c6XMTdjr86";
   const st=document.createElement("style");
   st.textContent=".loc{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px 12px}"
    +".locbtn{display:inline-block;padding:6px 14px;border-radius:999px;background:linear-gradient(135deg,#f4d27a,#c99a2e);color:#4a1030;font-weight:600;text-decoration:none;font-size:.85rem}"
@@ -45,15 +44,24 @@ document.getElementById("favBtn").addEventListener("click",()=>{
    +".gp{left:8px}.gx{right:8px}"
    +".gth{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}"
    +".gth img{width:56px;height:56px;object-fit:cover;border-radius:10px;border:2px solid transparent;cursor:pointer;flex:0 0 auto;opacity:.7}"
-   +".gth img.on{border-color:#b0125b;opacity:1}";
+   +".gth img.on{border-color:#b0125b;opacity:1}"
+   +".shtitle{margin:0 0 4px;font-size:1.1rem;color:#b0125b;text-align:center}"
+   +".shsub{margin:0 0 12px;text-align:center;font-size:.85rem;opacity:.8}"
+   +".shbtns{display:grid;grid-template-columns:1fr 1fr;gap:10px}"
+   +".shbtns a,.shbtns button{display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 8px;border:2px solid #c99a2e;border-radius:12px;background:rgba(255,255,255,.6);color:#4a1030;font-weight:600;font-size:.92rem;text-decoration:none;cursor:pointer}"
+   +".shbtns a:active,.shbtns button:active{transform:scale(.96)}"
+   +".shnote{margin-top:12px;font-size:.78rem;opacity:.75;text-align:center}";
   document.head.appendChild(st);
-  const loc=document.querySelector(".loc");
-  if(loc){const a=document.createElement("a");a.className="locbtn";a.href=MAPS;a.target="_blank";a.rel="noopener";a.textContent="🧭 Nous trouver";loc.appendChild(a)}
-  const links=document.querySelector("footer .links");
-  if(links){const a=document.createElement("a");a.href=MAPS;a.target="_blank";a.rel="noopener";a.textContent="Nous trouver";links.appendChild(a)}
 })();
 
-/* Bouton Partager */
+/* Nous trouver (Google Maps) */
+(function(){
+  const MAPS="https://maps.app.goo.gl/vLy6uV2c6XMTdjr86";
+  const loc=document.querySelector(".loc");
+  if(loc){const a=document.createElement("a");a.className="locbtn";a.href=MAPS;a.target="_blank";a.rel="noopener";a.textContent="🧭 Nous trouver";loc.appendChild(a)}
+})();
+
+/* Partager : menu avec plusieurs choix */
 (function(){
   function ajouter(){
     document.querySelectorAll(".card .info").forEach(inf=>{
@@ -72,18 +80,46 @@ document.getElementById("favBtn").addEventListener("click",()=>{
     if(el)new MutationObserver(ajouter).observe(el,{childList:true});
   });
   ajouter();
+
+  const dlg=document.createElement("dialog");dlg.id="shareDlg";
+  dlg.innerHTML='<button class="cl" data-close aria-label="Fermer">✕</button>'
+   +'<h3 class="shtitle">Partager cet article</h3><p class="shsub" id="shName"></p>'
+   +'<div class="shbtns">'
+   +'<a id="shWa" target="_blank" rel="noopener">💬 WhatsApp</a>'
+   +'<a id="shFb" target="_blank" rel="noopener">📘 Facebook</a>'
+   +'<a id="shTg" target="_blank" rel="noopener">✈️ Telegram</a>'
+   +'<button id="shCp" type="button">🔗 Copier le lien</button>'
+   +'<button id="shMore" type="button">⋯ Plus…</button>'
+   +'</div>'
+   +'<p class="shnote">Pour Instagram : choisis « Plus… » ou copie le lien.</p>';
+  document.body.appendChild(dlg);
+
+  let cur={url:"",texte:"",nom:""};
   document.addEventListener("click",e=>{
     const b=e.target.closest(".shr");if(!b)return;
     const box=b.closest(".card .info")||b.closest("#dBody");if(!box)return;
-    const nom=(box.querySelector("h3")||{}).textContent||"Article";
-    const prix=(box.querySelector(".price")||{}).textContent||"";
-    const url=location.origin+location.pathname;
-    const texte="Regarde ça chez Si’Bella Boutique : "+nom.trim()+(prix?" — "+prix.trim():"");
-    if(navigator.share){
-      navigator.share({title:"Si’Bella Boutique",text:texte,url:url}).catch(()=>{});
-    }else{
-      window.open("https://wa.me/?text="+encodeURIComponent(texte+" "+url),"_blank");
-    }
+    const idEl=box.querySelector(".add[data-id]")||(box.closest(".card")||{}).querySelector&&box.closest(".card").querySelector("[data-open]");
+    const id=idEl?(idEl.dataset.id||idEl.dataset.open):"";
+    const nom=((box.querySelector("h3")||{}).textContent||"Article").trim();
+    const prix=((box.querySelector(".price")||{}).textContent||"").trim();
+    const base=location.origin+location.pathname.replace(/[^/]*$/,"");
+    const url=id?base+"a/"+id+".html":base;
+    const texte="Regarde ça chez Si’Bella Boutique : "+nom+(prix?" — "+prix:"");
+    cur={url:url,texte:texte,nom:nom};
+    document.getElementById("shName").textContent=nom;
+    document.getElementById("shWa").href="https://wa.me/?text="+encodeURIComponent(texte+" "+url);
+    document.getElementById("shFb").href="https://www.facebook.com/sharer/sharer.php?u="+encodeURIComponent(url);
+    document.getElementById("shTg").href="https://t.me/share/url?url="+encodeURIComponent(url)+"&text="+encodeURIComponent(texte);
+    document.getElementById("shMore").hidden=!navigator.share;
+    dlg.showModal();
+  });
+  document.getElementById("shCp").addEventListener("click",()=>{
+    const fin=()=>{dlg.close();if(typeof toast==="function")toast("Lien copié ✓")};
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(cur.url).then(fin,()=>{prompt("Copie ce lien :",cur.url)})}
+    else prompt("Copie ce lien :",cur.url);
+  });
+  document.getElementById("shMore").addEventListener("click",()=>{
+    navigator.share({title:"Si’Bella Boutique",text:cur.texte,url:cur.url}).then(()=>dlg.close()).catch(()=>{});
   });
 })();
 
@@ -134,3 +170,38 @@ document.getElementById("favBtn").addEventListener("click",()=>{
   if(d)new MutationObserver(habiller).observe(d,{childList:true});
   charger().then(habiller);
 })();
+
+/* Ouvrir directement un article depuis un lien partagé (?a=...) */
+(function(){
+  const id=new URLSearchParams(location.search).get("a");
+  if(!id)return;
+  let n=0;
+  const t=setInterval(()=>{
+    n++;
+    if(typeof PRODUITS!=="undefined"&&PRODUITS.length){
+      clearInterval(t);
+      if(PRODUITS.find(p=>p.id===id))detail(id);
+    }else if(n>60)clearInterval(t);
+  },250);
+})();
+
+/* Commande WhatsApp : un lien par article, pour que la vendeuse voie la photo */
+document.addEventListener("submit",function(e){
+  if(!e.target||e.target.id!=="f")return;
+  e.preventDefault();e.stopImmediatePropagation();
+  const d=new FormData(e.target),v=ZONES[+d.get("ville")];
+  const base=location.origin+location.pathname.replace(/[^/]*$/,"");
+  let m="Bonjour Si’Bella Boutique, je veux commander :\n\n";
+  lignes().forEach((l,i)=>{
+    const k=l.p.id;
+    m+=(i+1)+") "+l.p.nom+" × "+l.q+" — "+money(l.p.prix*l.q)+"\n";
+    if(l.p.cat==="chaussures")m+="   Pointure : "+d.get("pt"+k)+" | Pied : "+d.get("cm"+k)+" cm\n";
+    m+="   Couleur : "+d.get("co"+k)+"\n";
+    m+="   Voir l’article : "+base+"a/"+k+".html\n\n";
+  });
+  m+="Articles : "+money(total());
+  m+="\nLivraison ("+v.zone+") : "+(v.prix===null?"à confirmer":money(v.prix));
+  m+=v.prix===null?"\nTotal articles : "+money(total())+" + livraison":"\nTotal : "+money(total()+v.prix);
+  m+="\n\nNom : "+d.get("nom")+"\nTéléphone : "+d.get("tel")+"\nZone : "+v.zone+"\nQuartier / repère : "+d.get("adr");
+  window.open(wa(m),"_blank");
+},true);
