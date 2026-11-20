@@ -185,17 +185,65 @@ document.getElementById("favBtn").addEventListener("click",()=>{
   },250);
 })();
 
-/* Commande WhatsApp : un lien par article, pour que la vendeuse voie la photo */
+/* Pointures : la cliente choisit seulement dans la liste, elle ne tape rien */
+const joliePointure=s=>String(s||"").replace(/(\d+(?:\.\d+)?)\s*:\s*(\d+(?:[.,]\d+)?)/g,function(m,a,b){return a+" ("+b.replace(".",",")+" cm)"});
+(function(){
+  function retoucher(root){
+    root.querySelectorAll(".meta").forEach(m=>{
+      const t=m.textContent;
+      if(/^\s*Pointures\s*:/i.test(t)&&/\d\s*:\s*\d/.test(t))m.textContent=joliePointure(t);
+    });
+    root.querySelectorAll(".add[data-id]").forEach(b=>{
+      const p=PRODUITS.find(x=>x.id===b.dataset.id);
+      if(p&&p.cat==="chaussures"&&!liste(p.pointures).length){
+        b.disabled=true;b.textContent="Pointures bientôt disponibles";
+      }
+    });
+  }
+  ["grid","best","dBody"].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)new MutationObserver(()=>retoucher(el)).observe(el,{childList:true});
+  });
+  function formulaire(){
+    const f=document.getElementById("f");
+    if(!f||f.dataset.ok)return;
+    f.dataset.ok="1";
+    f.querySelectorAll('select[name^="pt"] option').forEach(o=>{
+      if(o.getAttribute("value")!==null)return;
+      const v=o.textContent;
+      o.setAttribute("value",v);
+      o.textContent=joliePointure(v);
+    });
+    f.querySelectorAll('input[name^="cm"]').forEach(i=>{
+      const l=i.closest("label");
+      if(l){const s=l.nextElementSibling;if(s&&s.tagName==="SMALL")s.remove();l.remove()}
+    });
+    f.querySelectorAll('input[name^="pt"]').forEach(i=>{
+      const l=i.closest("label"),fs=i.closest("fieldset");
+      const lg=fs&&fs.querySelector("legend");
+      const w=document.createElement("p");
+      w.style.cssText="color:#b00020;font-weight:600;margin:8px 0";
+      w.textContent="Pointures non disponibles pour "+(lg?lg.textContent:"cet article")+". Retire-le du panier.";
+      if(l)l.replaceWith(w);
+      f.dataset.bloque="1";
+    });
+  }
+  const v=document.getElementById("vue");
+  if(v)new MutationObserver(formulaire).observe(v,{childList:true});
+})();
+
+/* Commande WhatsApp : un lien par article */
 document.addEventListener("submit",function(e){
   if(!e.target||e.target.id!=="f")return;
   e.preventDefault();e.stopImmediatePropagation();
+  if(e.target.dataset.bloque){alert("Retire du panier les articles dont les pointures ne sont pas disponibles.");return}
   const d=new FormData(e.target),v=ZONES[+d.get("ville")];
   const base=location.origin+location.pathname.replace(/[^/]*$/,"");
   let m="Bonjour Si’Bella Boutique, je veux commander :\n\n";
   lignes().forEach((l,i)=>{
     const k=l.p.id;
     m+=(i+1)+") "+l.p.nom+" × "+l.q+" — "+money(l.p.prix*l.q)+"\n";
-    if(l.p.cat==="chaussures")m+="   Pointure : "+d.get("pt"+k)+" | Pied : "+d.get("cm"+k)+" cm\n";
+    if(l.p.cat==="chaussures")m+="   Pointure : "+joliePointure(d.get("pt"+k))+"\n";
     m+="   Couleur : "+d.get("co"+k)+"\n";
     m+="   Voir l’article : "+base+"a/"+k+".html\n\n";
   });
