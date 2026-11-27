@@ -57,6 +57,15 @@ button:disabled{opacity:.6}
 
 <div id="app" hidden>
   <section>
+    <h2>Mon compte</h2>
+    <p id="monEmail"></p>
+    <label>Nouveau mot de passe (8 caractères minimum)<input id="np1" type="password" autocomplete="new-password"></label>
+    <label>Répéter le mot de passe<input id="np2" type="password" autocomplete="new-password"></label>
+    <p><button type="button" id="npSave">Changer mon mot de passe</button></p>
+    <div class="msg" id="mc"></div>
+  </section>
+
+  <section>
     <h2 id="titreForm">Ajouter un article</h2>
     <form id="fp">
       <label>Photos (5 maximum, la première est la photo principale)<input id="photo" type="file" accept="image/*" multiple></label>
@@ -126,7 +135,7 @@ async function demarrer(){
   const {data:ok}=await sb.rpc("is_admin");
   if(!ok){await sb.auth.signOut();msg($("#ml"),"Ce compte n’est pas administrateur.");$("#login").hidden=false;return}
   $("#login").hidden=true;$("#app").hidden=false;$("#out").hidden=false;
-  chargerListe();chargerZones();chargerToken();
+  infoCompte();chargerListe();chargerZones();chargerToken();
 }
 $("#fl").addEventListener("submit",async e=>{
   e.preventDefault();msg($("#ml"),"Connexion…",true);
@@ -135,6 +144,21 @@ $("#fl").addEventListener("submit",async e=>{
   $("#pw").value="";msg($("#ml"),"",true);demarrer();
 });
 $("#out").addEventListener("click",async()=>{await sb.auth.signOut();demarrer()});
+
+/* ---- Mon compte : changer le mot de passe ---- */
+async function infoCompte(){
+  const {data}=await sb.auth.getUser();
+  $("#monEmail").textContent="Connecté avec : "+(data&&data.user?data.user.email:"");
+}
+$("#npSave").addEventListener("click",async()=>{
+  const a=$("#np1").value,b=$("#np2").value;
+  if(a.length<8){msg($("#mc"),"8 caractères minimum.");return}
+  if(a!==b){msg($("#mc"),"Les deux mots de passe ne sont pas identiques.");return}
+  const {error}=await sb.auth.updateUser({password:a});
+  if(error){msg($("#mc"),"Erreur : "+error.message);return}
+  $("#np1").value="";$("#np2").value="";
+  msg($("#mc"),"Mot de passe changé ✓",true);
+});
 
 /* ---- Partage : pages d'aperçu sur GitHub ---- */
 const b64=s=>btoa(unescape(encodeURIComponent(s)));
@@ -336,22 +360,4 @@ async function chargerZones(){
 }
 $("#zones").addEventListener("click",async e=>{
   const b=e.target.closest("button");if(!b)return;
-  if(b.dataset.zs){const v=document.querySelector('[data-p="'+b.dataset.zs+'"]').value;
-    const {error}=await sb.from("livraison").update({prix:v===""?null:parseInt(v)}).eq("id",b.dataset.zs);
-    msg($("#mz"),error?"Erreur : "+error.message:"Tarif enregistré ✓",!error)}
-  else if(b.dataset.zd){if(!confirm("Supprimer cette zone ?"))return;
-    const {error}=await sb.from("livraison").delete().eq("id",b.dataset.zd);
-    if(error)msg($("#mz"),"Erreur : "+error.message);chargerZones()}
-});
-$("#zadd").addEventListener("click",async()=>{
-  const z=$("#zn").value.trim();if(!z)return;
-  const v=$("#zp").value;
-  const {error}=await sb.from("livraison").insert({zone:z,prix:v===""?null:parseInt(v)});
-  if(error){msg($("#mz"),"Erreur : "+error.message);return}
-  $("#zn").value="";$("#zp").value="";msg($("#mz"),"Zone ajoutée ✓",true);chargerZones();
-});
-
-demarrer();
-</script>
-</body>
-</html>
+  if(b.dataset.zs){const v=document.quer
